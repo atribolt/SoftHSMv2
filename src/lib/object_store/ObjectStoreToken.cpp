@@ -43,7 +43,7 @@
 #endif
 
 typedef ObjectStoreToken* (*CreateToken)(const std::string , const std::string , int , const ByteString& , const ByteString& );
-typedef ObjectStoreToken* (*AccessToken)(const std::string &, const std::string &, int);
+typedef ObjectStoreToken* (*AccessToken)(const std::string &, const std::string &, int, bool);
 
 static CreateToken static_createToken = reinterpret_cast<CreateToken>(OSToken::createToken);
 static AccessToken static_accessToken = reinterpret_cast<AccessToken>(OSToken::accessToken);
@@ -78,7 +78,7 @@ ObjectStoreToken* ObjectStoreToken::createToken(const std::string basePath, cons
 }
 
 // Access an existing token
-/*static*/ ObjectStoreToken *ObjectStoreToken::accessToken(const std::string &basePath, const std::string &tokenDir, int umask)
+/*static*/ ObjectStoreToken *ObjectStoreToken::accessToken(const std::string &basePath, const std::string &tokenDir, int umask, bool createOnly)
 {
-	return static_accessToken(basePath, tokenDir, umask);
+	return static_accessToken(basePath, tokenDir, umask, createOnly);
 }

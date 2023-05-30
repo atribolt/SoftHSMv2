@@ -48,7 +48,7 @@ public:
 	static ObjectStoreToken* createToken(const std::string basePath, const std::string tokenDir, int umask, const ByteString& label, const ByteString& serial);
 
 	// Access an existing token
-	static ObjectStoreToken* accessToken(const std::string &basePath, const std::string &tokenDir, int umask);
+	static ObjectStoreToken* accessToken(const std::string &basePath, const std::string &tokenDir, int umask, bool createOnly = false);
 
 	// Set the SO PIN
 	virtual bool setSOPIN(const ByteString& soPINBlob) = 0;

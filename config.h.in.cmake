@@ -18,6 +18,9 @@
 /* The default location of the token directory */
 #cmakedefine DEFAULT_TOKENDIR "@DEFAULT_TOKENDIR@"
 
+/* The default storage mode (optimization merge cache and FS) */
+#define DEFAULT_OBJSTORE_CREATE_ONLY @DEFAULT_OBJSTORE_CREATE_ONLY@
+
 /* Define if advanced AES key wrap without pad is supported */
 #cmakedefine HAVE_AES_KEY_WRAP @HAVE_AES_KEY_WRAP@
 
@@ -260,3 +263,5 @@ int setenv(const char *name, const char *value, int overwrite);
 // #pragma warning(disable: 4996)
 
 #endif
+
+#cmakedefine DEBUG_LOG_STDOUT @DEBUG_LOG_STDOUT@

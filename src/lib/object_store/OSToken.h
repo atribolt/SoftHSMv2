@@ -53,13 +53,13 @@ class OSToken : public ObjectStoreToken
 {
 public:
 	// Constructor
-	OSToken(const std::string inTokenPath, int inUmask);
+	OSToken(const std::string inTokenPath, int inUmask, bool createOnly = false);
 
 	// Create a new token
 	static OSToken* createToken(const std::string basePath, const std::string tokenDir, int umask, const ByteString& label, const ByteString& serial);
 
 	// Access an existing token
-	static OSToken* accessToken(const std::string &basePath, const std::string &tokenDir, int umask);
+	static OSToken* accessToken(const std::string &basePath, const std::string &tokenDir, int umask, bool createOnly);
 
 	// Constructor for new tokens
 	OSToken(const std::string tokenPath, const ByteString& label, int umask, const ByteString& serialNumber);
@@ -122,8 +122,12 @@ private:
 	// Index the token
 	bool index(bool isFirstTime = false);
 
+	bool indexMerge(bool isFirstTime = false);
+	bool indexNewOnly();
+
 	// Is the token consistent and valid?
 	bool valid;
+	bool createOnly;
 
 	// The token path
 	std::string tokenPath;

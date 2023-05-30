@@ -57,14 +57,16 @@ set(DEFAULT_SOFTHSM2_CONF "${CMAKE_INSTALL_FULL_SYSCONFDIR}/softhsm2.conf"
     CACHE STRING "The default location of softhsm.conf")
 set(DEFAULT_TOKENDIR "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/softhsm/tokens/"
     CACHE STRING "The default location of the token directory")
+set(DEFAULT_OBJSTORE_CREATE_ONLY false
+		CACHE STRING "An object wont be remove dynamicly from the store")
 
 set(MAX_PIN_LEN 255 CACHE STRING "Maximum PIN length")
 set(MIN_PIN_LEN 4 CACHE STRING "Minimum PIN length")
 
-set(VERSION "2.6.1")
+set(VERSION "2.6.2")
 set(VERSION_MAJOR 2)
 set(VERSION_MINOR 6)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 2)
 
 set(PACKAGE "softhsm")
 set(PACKAGE_BUGREPORT)

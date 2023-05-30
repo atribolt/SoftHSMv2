@@ -47,6 +47,7 @@ const struct config Configuration::valid_config[] = {
 	{ "directories.tokendir",	CONFIG_TYPE_STRING },
 	{ "objectstore.backend",	CONFIG_TYPE_STRING },
 	{ "objectstore.umask",		CONFIG_TYPE_INT_OCTAL },
+  { "objectstore.createonly", CONFIG_TYPE_BOOL },
 	{ "log.level",			CONFIG_TYPE_STRING },
 	{ "slots.removable",		CONFIG_TYPE_BOOL },
 	{ "slots.mechanisms",		CONFIG_TYPE_STRING },

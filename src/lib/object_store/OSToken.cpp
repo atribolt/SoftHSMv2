@@ -43,6 +43,7 @@
 #include "cryptoki.h"
 #include "OSToken.h"
 #include "OSPathSep.h"
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <set>
@@ -51,10 +52,11 @@
 #include <stdio.h>
 
 // Constructor
-OSToken::OSToken(const std::string inTokenPath, int inUmask)
+OSToken::OSToken(const std::string inTokenPath, int inUmask, bool cOnly)
 {
 	tokenPath = inTokenPath;
 	umask = inUmask;
+	createOnly = cOnly;
 
 	tokenDir = new Directory(tokenPath);
 	gen = Generation::create(tokenPath + OS_PATHSEP + "generation", true);
@@ -130,9 +132,9 @@ OSToken::OSToken(const std::string inTokenPath, int inUmask)
 }
 
 // Access an existing token
-/*static*/ OSToken *OSToken::accessToken(const std::string &basePath, const std::string &tokenDir, int umask)
+/*static*/ OSToken *OSToken::accessToken(const std::string &basePath, const std::string &tokenDir, int umask, bool createOnly)
 {
-	return new OSToken(basePath + OS_PATHSEP + tokenDir, umask);
+	return new OSToken(basePath + OS_PATHSEP + tokenDir, umask, createOnly);
 }
 
 // Destructor
@@ -607,6 +609,21 @@ bool OSToken::index(bool isFirstTime /* = false */)
 
 	DEBUG_MSG("Token %s has changed", tokenPath.c_str());
 
+	bool status = false;
+	if (createOnly) {
+		status = indexNewOnly();
+		DEBUG_MSG("New files loaded");
+	}
+	else {
+		status = indexMerge(isFirstTime);
+		DEBUG_MSG("Merging complete");
+	}
+
+	return status;
+}
+
+bool OSToken::indexMerge(bool isFirstTime)
+{
 	// Retrieve the directory listing
 	std::vector<std::string> tokenFiles = tokenDir->getFiles();
 
@@ -721,3 +738,31 @@ bool OSToken::index(bool isFirstTime /* = false */)
 	return true;
 }
 
+bool OSToken::indexNewOnly()
+{
+	for (const auto& file : tokenDir->getFiles())
+	{
+		if (file.size() > 7 && file.substr(file.size()-7) == ".object" && file != "token.object")
+		{
+			if (currentFiles.find(file) == currentFiles.end())
+			{
+				auto lockFile = file;
+				lockFile.replace(lockFile.find_last_of('.'), std::string::npos, ".lock");
+
+				ObjectFile* newObject = new ObjectFile(this, tokenPath + OS_PATHSEP + file, umask, tokenPath + OS_PATHSEP + lockFile);
+
+				objects.insert(newObject);
+				currentFiles.insert(file);
+				allObjects.insert(newObject);
+
+				DEBUG_MSG("New file object added: %s", file.c_str());
+			}
+		}
+		else
+		{
+			DEBUG_MSG("Ignored file %s", file.c_str());
+		}
+	}
+
+	return true;
+}

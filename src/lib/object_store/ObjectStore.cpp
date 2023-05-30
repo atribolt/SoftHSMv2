@@ -43,7 +43,7 @@
 #include <stdio.h>
 
 // Constructor
-ObjectStore::ObjectStore(std::string inStorePath, int inUmask)
+ObjectStore::ObjectStore(std::string inStorePath, int inUmask, bool createOnly)
 {
 	storePath = inStorePath;
 	umask = inUmask;
@@ -68,7 +68,7 @@ ObjectStore::ObjectStore(std::string inStorePath, int inUmask)
 	for (std::vector<std::string>::iterator i = dirs.begin(); i != dirs.end(); i++)
 	{
 		// Create a token instance
-		ObjectStoreToken* token = ObjectStoreToken::accessToken(storePath, *i, umask);
+		ObjectStoreToken* token = ObjectStoreToken::accessToken(storePath, *i, umask, createOnly);
 
 		if (!token->isValid())
 		{
